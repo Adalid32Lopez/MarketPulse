@@ -13,7 +13,15 @@ return new class extends Migration
     {
         Schema::create('bussinesses', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('name');
+            $table->string('industry');
+            $table->string('currency');
+            $table->string('logo');
+            $table->boolean('is_active');
+            $table->timestamps('created_at');
+            $table->timestamps('updated_at');
+
         });
     }
 
