@@ -19,9 +19,7 @@ return new class extends Migration
             $table->string('currency');
             $table->string('logo');
             $table->boolean('is_active');
-            $table->timestamps('created_at');
-            $table->timestamps('updated_at');
-
+            $table->timestamps(); 
         });
     }
 

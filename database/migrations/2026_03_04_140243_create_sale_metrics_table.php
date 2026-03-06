@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('sale_metrics', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->foreignId('business_id')->constrained()->onDelete('cascade');
+            $table->date('date');
+            $table->decimal('total_sales');
+            $table->decimal('total_revenue');
+            $table->decimal('avg_ticket');
+            $table->int('top_product');
+            $table->timestamps('created_at');
         });
     }
 
