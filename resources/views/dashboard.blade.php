@@ -1,23 +1,17 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <style>
-        body { font-family: sans-serif; padding: 40px; background: #f3f4f6; }
-        .card { background: white; padding: 2rem; border-radius: 8px; max-width: 500px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        button { padding: 8px 16px; background: #ef4444; color: white; border: none; border-radius: 4px; cursor: pointer; }
-    </style>
-</head>
-<body>
-<div class="card">
-    <h2>¡Bienvenido, {{ Auth::user()->name }}! 👋</h2>
-    <p>Has iniciado sesión correctamente con: <strong>{{ Auth::user()->email }}</strong></p>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
 
-    <form method="POST" action="/logout">
-        @csrf
-        <button type="submit">Cerrar sesión</button>
-    </form>
-</div>
-</body>
-</html>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                    {{ __("You're logged in!") }}
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>

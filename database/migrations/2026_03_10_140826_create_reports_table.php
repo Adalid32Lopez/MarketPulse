@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('business_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('title');
+            $table->enum('type', ['DAILY', 'WEEKLY', 'MONTHLY', 'CUSTOM']);
+            $table->json('filters')->nullable();
+            $table->string('file_path')->nullable();
+            $table->timestamp('generated_at')->nullable();
             $table->timestamps();
         });
     }

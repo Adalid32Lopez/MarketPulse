@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('alerts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('business_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->enum('type', ['LOW_STOCK', 'SALES_GOAL', 'REVENUE_DROP', 'NEW_SALE']);
+            $table->text('message');
+            $table->decimal('threshold', 10, 2)->nullable();
+            $table->boolean('is_read')->default(false);
+            $table->timestamp('triggered_at')->nullable();
             $table->timestamps();
         });
     }
