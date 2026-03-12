@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/Adalid32Lopez/MarketPulse/Assets/New project.jpeg?raw=true" alt="Banner" width="100%" style="border-radius: 10px;" />
+  <img src="https://raw.githubusercontent.com/Adalid32Lopez/MarketPulse/main/Assets/samurai.jpeg" alt="Banner" width="75%" style="border-radius: 10px; max-height: 400px; object-fit: cover;" />
 </div>
 
 
