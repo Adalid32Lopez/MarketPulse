@@ -2,11 +2,12 @@
   <img src="https://raw.githubusercontent.com/Adalid32Lopez/MarketPulse/main/Assets/samurai.jpeg" alt="Banner" width="75%" style="border-radius: 10px; max-height: 400px; object-fit: cover;" />
 </div>
 
-
 <div align="center">
 
 # 📊 MarketPulse
 ### Plataforma de Analítica y Reportes de Ventas en Tiempo Real
+
+<img src="https://capsule-render.vercel.app/render?type=waving&color=00b4d8&height=200&section=header&text=MarketPulse&fontSize=90&animation=fadeIn" />
 
 [![Laravel](https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
 [![Arch Linux](https://img.shields.io/badge/Arch_Linux-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://archlinux.org)
