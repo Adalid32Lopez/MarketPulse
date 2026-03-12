@@ -1,4 +1,9 @@
 <div align="center">
+  <img src="https://github.com/Adalid32Lopez/MarketPulse/Assets/New project.jpeg?raw=true" alt="Banner" width="100%" style="border-radius: 10px;" />
+</div>
+
+
+<div align="center">
 
 # 📊 MarketPulse
 ### Plataforma de Analítica y Reportes de Ventas en Tiempo Real
