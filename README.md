@@ -4,7 +4,7 @@
 
 <div align="center">
 
-# 📊 MarketPulse
+# MarketPulse
 ### Plataforma de Analítica y Reportes de Ventas en Tiempo Real
 
 <img src="https://capsule-render.vercel.app/render?type=waving&color=00b4d8&height=200&section=header&text=MarketPulse&fontSize=90&animation=fadeIn" />
@@ -13,9 +13,6 @@
 [![Arch Linux](https://img.shields.io/badge/Arch_Linux-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white)](https://archlinux.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-<p align="center">
-  <img src="https://raw.githubusercontent.com/andreasbm/readme/master/assets/lines/rainbow.png" width="100%">
-</p>
 
 **MarketPulse** resuelve la falta de visibilidad inmediata en las empresas, transformando datos crudos en decisiones estrategicas mediante dashboards en vivo y alertas inteligentes.
 </div>
