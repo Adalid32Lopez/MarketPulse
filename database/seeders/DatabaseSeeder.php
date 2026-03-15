@@ -3,23 +3,33 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Business;
+use Spatie\Permission\Models\Role;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Crear roles
+        Role::create(['name' => 'admin', 'guard_name' => 'web']);
+        Role::create(['name' => 'vendedor', 'guard_name' => 'web']);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // Crear usuario admin de prueba
+        $user = User::create([
+            'name' => 'Admin',
+            'email' => 'admin@test.com',
+            'password' => bcrypt('password'),
+        ]);
+        $user->assignRole('admin');
+
+        // Crear un negocio de prueba
+        Business::create([
+            'user_id' => $user->id,
+            'name' => 'Mi Tienda',
+            'industry' => 'Retail',
+            'currency' => 'USD',
+            'is_active' => true,
         ]);
     }
 }
