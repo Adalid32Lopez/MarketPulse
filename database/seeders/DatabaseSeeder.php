@@ -31,5 +31,14 @@ class DatabaseSeeder extends Seeder
             'currency' => 'USD',
             'is_active' => true,
         ]);
+
+        // Qué puede hacer cada rol
+        Permission::create(['name' => 'gestionar productos']);
+        Permission::create(['name' => 'registrar ventas']);
+        Permission::create(['name' => 'ver reportes']);
+        Permission::create(['name' => 'gestionar equipo']);
+
+        $admin->givePermissionTo(Permission::all());
+        $vendedor->givePermissionTo(['registrar ventas']);
     }
 }

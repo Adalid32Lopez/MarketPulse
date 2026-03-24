@@ -31,9 +31,15 @@ class BusinessController extends Controller
 
         Business::create($validated);
 
-        return redirect()
-            ->route('dashboard')
-            ->with('success', 'Negocio creado correctamente.');
+        $business = Business::create($validated);
+
+        // return redirect()
+        //     ->route('dashboard')
+        //     ->with('success', 'Negocio creado correctamente.');
+
+         return redirect()
+        ->route('dashboard')
+        ->with('success', "Negocio '{$business->name}' creado. ¡Empieza configurándolo!");
     }
 
     public function edit(Business $business)

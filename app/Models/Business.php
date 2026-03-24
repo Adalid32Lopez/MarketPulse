@@ -46,4 +46,10 @@ class Business extends Model {
     {
         return $this->hasMany(Alert::class);
     }
+    public function members()
+    {
+    return $this->belongsToMany(User::class, 'business_user')
+                ->withPivot('role')
+                ->withTimestamps();
+    }
 }

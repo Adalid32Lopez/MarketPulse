@@ -10,6 +10,8 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\AlertController;
+use App\Http\Controllers\UserController;
 
 
 
@@ -27,7 +29,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->name('dashboard');
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth', 'belongs.to.business')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -40,6 +42,20 @@ Route::middleware('auth')->group(function () {
     // ReporController
     Route::resource('businesses.reports', ReportController::class)->only([
     'index', 'create', 'store', 'show', 'destroy'
+    ]);
+
+    //
+    Route::resource('businesses.alerts', AlertController::class)->only([
+    'index', 'store', 'destroy'
+    ]);
+    // Ruta especial para marcar como leída
+    Route::patch('businesses/{business}/alerts/{alert}/read', [AlertController::class, 'markAsRead'])
+    ->name('businesses.alerts.read');
+    
+
+    // ruta para crear un nuevo usuario como vendedor
+    Route::resource('businesses.users', UserController::class)->only([
+    'index', 'create', 'store', 'destroy'
     ]);
     
 

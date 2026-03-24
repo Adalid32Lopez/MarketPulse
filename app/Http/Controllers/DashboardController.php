@@ -9,8 +9,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $user = auth()->user();
         // Tomamos el primer negocio del usuario autenticado
-        $business = auth()->user()->businesses()->first();
+        $business = $user->businesses()->first()
+             ?? $user->memberOf()->first();
 
         if (!$business) {
             return view('dashboard', ['business' => null]);
@@ -52,6 +54,8 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        $unreadAlerts = $business->alerts()->where('is_read', false)->count();
+
         return view('dashboard', compact(
             'business',
             'salesThisMonth',
@@ -59,7 +63,9 @@ class DashboardController extends Controller
             'revenueToday',
             'totalCustomers',
             'lowStockProducts',
-            'recentSales'
+            'recentSales',
+            'unreadAlerts'
         ));
+        
     }
 }

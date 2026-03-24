@@ -57,4 +57,20 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Negocios donde el usuario es miembro (vendedor)
+    public function memberOf()
+    {
+        return $this->belongsToMany(Business::class, 'business_user')
+                    ->withPivot('role')
+                    ->withTimestamps();
+    }
+
+    // Todos los negocios accesibles (propios + donde es miembro)
+    public function accessibleBusinesses()
+    {
+        $owned    = $this->businesses()->pluck('id');
+        $member   = $this->memberOf()->pluck('businesses.id');
+        return $owned->merge($member)->unique();
+    }
 }
