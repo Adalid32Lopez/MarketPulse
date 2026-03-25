@@ -19,7 +19,7 @@
                 </div>
             @endif
 
-            {{-- Formulario para crear alerta manual --}}
+            <!-- {{-- Formulario para crear alerta manual --}}
             <div class="bg-white shadow-sm rounded-lg p-6 mb-6">
                 <h3 class="font-semibold text-gray-700 mb-4">Crear alerta manual</h3>
 
@@ -59,7 +59,7 @@
                         </button>
                     </div>
                 </form>
-            </div>
+            </div> -->
 
             {{-- Lista de alertas --}}
             <div class="space-y-3">

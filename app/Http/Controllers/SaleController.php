@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AlertService;
 use App\Models\Business;
 use App\Models\Sale;
 use App\Models\SaleItem;
@@ -53,11 +54,13 @@ class SaleController extends Controller
             'payment_method' => $request->payment_method,
             'notes'          => $request->notes,
             'sold_at'        => now(),
-            'total'          => 0, // se actualiza abajo
+            'total'          => 0,
         ]);
 
         // Crear los items y descontar stock
         $subtotal = 0;
+        $itemsWithProducts = []; // guardamos los productos para las alertas
+
         foreach ($request->items as $item) {
             $lineSubtotal = $item['quantity'] * $item['unit_price'];
             $subtotal += $lineSubtotal;
@@ -73,11 +76,45 @@ class SaleController extends Controller
             // Descontar stock
             $product = $business->products()->find($item['product_id']);
             $product->decreaseStock($item['quantity']);
+
+            // Guardar producto actualizado para revisar stock después
+            $itemsWithProducts[] = $product->fresh(); // fresh() trae el stock actualizado
         }
 
         // Actualizar total
         $total = $subtotal - $sale->discount + $sale->tax;
         $sale->update(['total' => $total]);
+
+        // ── ALERTAS AUTOMÁTICAS ──────────────────────────
+
+        // 1. Alerta de nueva venta
+        AlertService::newSale($sale);
+
+        // 2. Alerta de stock bajo (menos de 5 unidades)
+        foreach ($itemsWithProducts as $product) {
+            if ($product->stock < 5) {
+                AlertService::lowStock($product, $business);
+            }
+        }
+
+        // 3. Alerta de meta mensual ($5000)
+        $revenueThisMonth = $business->sales()
+            ->whereMonth('sold_at', now()->month)
+            ->whereYear('sold_at', now()->year)
+            ->where('status', 'COMPLETED')
+            ->sum('total');
+
+        $goal        = 5000;
+        $prevRevenue = $revenueThisMonth - $total;
+
+        // Solo dispara la alerta en el momento exacto que se cruza la meta
+        if ($prevRevenue < $goal && $revenueThisMonth >= $goal) {
+            AlertService::salesGoal($business, $revenueThisMonth, $goal);
+        }
+        
+        AlertService::updateMetrics($business);
+
+        // ─────────────────────────────────────────────────
 
         return redirect()
             ->route('businesses.sales.show', [$business, $sale])
@@ -111,4 +148,5 @@ class SaleController extends Controller
             ->route('businesses.sales.index', $business)
             ->with('success', 'Venta eliminada.');
     }
+
 }

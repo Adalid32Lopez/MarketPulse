@@ -5,67 +5,70 @@ namespace App\Http\Controllers;
 use App\Models\Business;
 use Illuminate\Http\Request;
 
+
 class DashboardController extends Controller
+{       public function index(Request $request)
 {
-    public function index()
-    {
-        $user = auth()->user();
-        // Tomamos el primer negocio del usuario autenticado
-        $business = $user->businesses()->first()
-             ?? $user->memberOf()->first();
+    $user = auth()->user();
 
-        if (!$business) {
-            return view('dashboard', ['business' => null]);
-        }
+    $ownedBusinesses = $user->businesses()->get();
+    $memberBusinesses = $user->memberOf()->get();
+    $allBusinesses = $ownedBusinesses->merge($memberBusinesses);
 
-        // Métricas del mes actual
-        $currentMonth = now()->month;
-        $currentYear  = now()->year;
-
-        $salesThisMonth = $business->sales()
-            ->whereMonth('sold_at', $currentMonth)
-            ->whereYear('sold_at', $currentYear)
-            ->where('status', 'COMPLETED')
-            ->count();
-
-        $revenueThisMonth = $business->sales()
-            ->whereMonth('sold_at', $currentMonth)
-            ->whereYear('sold_at', $currentYear)
-            ->where('status', 'COMPLETED')
-            ->sum('total');
-
-        $revenueToday = $business->sales()
-            ->whereDate('sold_at', today())
-            ->where('status', 'COMPLETED')
-            ->sum('total');
-
-        $totalCustomers = $business->customers()->count();
-
-        // Productos con stock bajo (menos de 5 unidades)
-        $lowStockProducts = $business->products()
-            ->where('stock', '<', 5)
-            ->where('is_active', true)
-            ->get();
-
-        // Últimas 5 ventas
-        $recentSales = $business->sales()
-            ->with(['customer', 'seller'])
-            ->latest('sold_at')
-            ->take(5)
-            ->get();
-
-        $unreadAlerts = $business->alerts()->where('is_read', false)->count();
-
-        return view('dashboard', compact(
-            'business',
-            'salesThisMonth',
-            'revenueThisMonth',
-            'revenueToday',
-            'totalCustomers',
-            'lowStockProducts',
-            'recentSales',
-            'unreadAlerts'
-        ));
-        
+    if ($allBusinesses->isEmpty()) {
+        return view('dashboard', ['business' => null]);
     }
+
+    // Si el usuario seleccionó un negocio específico, usarlo
+    // Si no, usar el primero disponible
+    $businessId = $request->get('business_id', $allBusinesses->first()->id);
+    $business = $allBusinesses->firstWhere('id', $businessId)
+             ?? $allBusinesses->first();
+
+    $currentMonth = now()->month;
+    $currentYear  = now()->year;
+
+    $metricsThisMonth = $business->saleMetrics()
+        ->whereMonth('date', $currentMonth)
+        ->whereYear('date', $currentYear)
+        ->get();
+
+    $salesThisMonth   = $metricsThisMonth->sum('total_sales');
+    $revenueThisMonth = $metricsThisMonth->sum('total_revenue');
+    $avgTicket        = $metricsThisMonth->avg('avg_ticket') ?? 0;
+
+    $revenueToday = $business->saleMetrics()
+        ->whereDate('date', today())
+        ->value('total_revenue') ?? 0;
+
+    $totalCustomers   = $business->customers()->count();
+
+    $lowStockProducts = $business->products()
+        ->where('stock', '<', 5)
+        ->where('is_active', true)
+        ->get();
+
+    $recentSales = $business->sales()
+        ->with(['customer', 'seller'])
+        ->latest('sold_at')
+        ->take(5)
+        ->get();
+
+    $unreadAlerts = $business->alerts()
+        ->where('is_read', false)
+        ->count();
+
+    return view('dashboard', compact(
+        'business',
+        'allBusinesses',
+        'salesThisMonth',
+        'revenueThisMonth',
+        'revenueToday',
+        'avgTicket',
+        'totalCustomers',
+        'lowStockProducts',
+        'recentSales',
+        'unreadAlerts'
+    ));
+}
 }

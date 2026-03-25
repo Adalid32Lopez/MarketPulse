@@ -22,6 +22,23 @@
                 </div>
             @else
 
+                {{-- Selector de negocio (solo si tiene más de uno) --}}
+                @if($allBusinesses->count() > 1)
+                    <div class="mb-6 flex items-center gap-3">
+                        <span class="text-slate-400 text-sm">Negocio activo:</span>
+                        <form method="GET" action="{{ route('dashboard') }}">
+                            <select name="business_id" onchange="this.form.submit()"
+                                    class="bg-slate-800 border border-slate-700 text-slate-200 rounded-xl px-4 py-2 text-sm">
+                                @foreach($allBusinesses as $b)
+                                    <option value="{{ $b->id }}" {{ $b->id === $business->id ? 'selected' : '' }}>
+                                        {{ $b->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
+                    </div>
+                @endif
+
                 {{-- Navegación rápida con Efecto Glass y Hover Elevado --}}
                 <div class="bg-slate-900/50 border border-slate-800 backdrop-blur-xl rounded-3xl p-8 mb-8 shadow-2xl">
                     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -44,16 +61,23 @@
 
                     <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
                         @php
-                            $navItems = [
-                                ['route' => 'businesses.products.index', 'icon' => '📦', 'label' => 'Productos', 'color' => 'hover:border-blue-500/50'],
-                                ['route' => 'businesses.categories.index', 'icon' => '🏷️', 'label' => 'Categorías', 'color' => 'hover:border-purple-500/50'],
-                                ['route' => 'businesses.customers.index', 'icon' => '👥', 'label' => 'Clientes', 'color' => 'hover:border-pink-500/50'],
-                                ['route' => 'businesses.sales.create', 'icon' => '🛒', 'label' => 'Venta', 'color' => 'bg-blue-600 hover:bg-blue-500 border-none shadow-lg shadow-blue-500/20', 'isPrimary' => true],
-                                ['route' => 'businesses.sales.index', 'icon' => '📊', 'label' => 'Ventas', 'color' => 'hover:border-emerald-500/50'],
-                                ['route' => 'businesses.reports.index', 'icon' => '📈', 'label' => 'Reportes', 'color' => 'hover:border-orange-500/50'],
-                                ['route' => 'businesses.alerts.index', 'icon' => '🔔', 'label' => 'Alertas', 'color' => 'hover:border-red-500/50'],
-                                ['route' => 'businesses.users.index', 'icon' => '👤', 'label' => 'Equipo', 'color' => 'hover:border-indigo-500/50'],
+                        $navItems = [
+                            ['route' => 'businesses.customers.index', 'icon' => '👥', 'label' => 'Clientes', 'color' => 'hover:border-pink-500/50'],
+                            ['route' => 'businesses.sales.create', 'icon' => '🛒', 'label' => 'Venta', 'color' => 'bg-blue-600 hover:bg-blue-500 border-none shadow-lg shadow-blue-500/20', 'isPrimary' => true],
+                            ['route' => 'businesses.sales.index', 'icon' => '📊', 'label' => 'Ventas', 'color' => 'hover:border-emerald-500/50'],
                             ];
+
+                            // Solo admin ve estas secciones
+                            if(auth()->user()->hasRole('admin')) {
+                                $navItems = array_merge([
+                                    ['route' => 'businesses.products.index', 'icon' => '📦', 'label' => 'Productos', 'color' => 'hover:border-blue-500/50'],
+                                    ['route' => 'businesses.categories.index', 'icon' => '🏷️', 'label' => 'Categorías', 'color' => 'hover:border-purple-500/50'],
+                                ], $navItems, [
+                                    ['route' => 'businesses.reports.index', 'icon' => '📈', 'label' => 'Reportes', 'color' => 'hover:border-orange-500/50'],
+                                    ['route' => 'businesses.alerts.index', 'icon' => '🔔', 'label' => 'Alertas', 'color' => 'hover:border-red-500/50'],
+                                    ['route' => 'businesses.users.index', 'icon' => '👤', 'label' => 'Equipo', 'color' => 'hover:border-indigo-500/50'],
+                                ]);
+                            }
                         @endphp
 
                         @foreach($navItems as $item)
@@ -70,6 +94,11 @@
 
                 {{-- Métricas con gradientes y resplandor --}}
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+
+                <div class="bg-white rounded-lg shadow-sm p-6">
+                    <p class="text-sm text-gray-500">Ticket promedio</p>
+                    <p class="text-3xl font-bold text-purple-600 mt-1">${{ number_format($avgTicket, 2) }}</p>
+                </div>
                     @php
                         $metrics = [
                             ['label' => 'Ventas mes', 'value' => $salesThisMonth, 'color' => 'text-white'],
