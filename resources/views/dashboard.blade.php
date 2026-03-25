@@ -72,11 +72,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
                     @php
                         $metrics = [
-                            ['label' => 'Ventas mes', 'value' => $salesThisMonth, 'color' => 'text-white'],
-                            ['label' => 'Ingresos mes', 'value' => '$'.number_format($revenueThisMonth, 2), 'color' => 'text-emerald-400'],
-                            ['label' => 'Ingresos hoy', 'value' => '$'.number_format($revenueToday, 2), 'color' => 'text-blue-400'],
-                            ['label' => 'Clientes', 'value' => $totalCustomers, 'color' => 'text-purple-400'],
-                        ];
+                        ['label' => 'Ventas mes', 'value' => $salesThisMonth, 'color' => 'text-white'],
+                        ['label' => 'Ingresos mes', 'value' => $business->currency.' '.number_format($revenueThisMonth, 2), 'color' => 'text-emerald-400'],
+                        ['label' => 'Ingresos hoy', 'value' => $business->currency.' '.number_format($revenueToday, 2), 'color' => 'text-blue-400'],
+                        ['label' => 'Clientes', 'value' => $totalCustomers, 'color' => 'text-purple-400'],
+                    ];
                     @endphp
 
                     @foreach($metrics as $metric)
@@ -129,7 +129,7 @@
                                                 </a>
                                             </td>
                                             <td class="px-8 py-4 text-sm text-slate-300">{{ $sale->customer->name ?? 'Invitado' }}</td>
-                                            <td class="px-8 py-4 text-sm font-bold text-white text-right">${{ number_format($sale->total, 2) }}</td>
+                                            <td class="px-8 py-4 text-sm font-bold text-white text-right">{{ $business->currency }} {{ number_format($sale->total, 2) }}</td>
                                             <td class="px-8 py-4 text-center">
                                                 @php
                                                     $statusClasses = [

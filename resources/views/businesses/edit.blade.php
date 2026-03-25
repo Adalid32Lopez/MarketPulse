@@ -29,12 +29,9 @@
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-gray-700">Moneda *</label>
                         <select name="currency" class="mt-1 w-full border-gray-300 rounded-md shadow-sm">
-                            <option value="USD" {{ old('currency', $business->currency) == 'USD' ? 'selected' : '' }}>USD — Dólar</option>
+                            
                             <option value="BOB" {{ old('currency', $business->currency) == 'BOB' ? 'selected' : '' }}>BOB — Boliviano</option>
-                            <option value="EUR" {{ old('currency', $business->currency) == 'EUR' ? 'selected' : '' }}>EUR — Euro</option>
-                            <option value="ARS" {{ old('currency', $business->currency) == 'ARS' ? 'selected' : '' }}>ARS — Peso Argentino</option>
-                            <option value="COP" {{ old('currency', $business->currency) == 'COP' ? 'selected' : '' }}>COP — Peso Colombiano</option>
-                            <option value="MXN" {{ old('currency', $business->currency) == 'MXN' ? 'selected' : '' }}>MXN — Peso Mexicano</option>
+                            
                         </select>
                     </div>
 
