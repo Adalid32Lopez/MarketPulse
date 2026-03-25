@@ -53,10 +53,7 @@ class UserController extends Controller
         $business->members()->attach($user->id, ['role' => 'vendedor']);
 
         // Asignar rol Spatie si no lo tiene
-        if (!$user->hasRole('vendedor')) {
-            $user->assignRole('vendedor');
-        }
-
+        $user->syncRoles(['vendedor']);
         return redirect()
             ->route('businesses.users.index', $business)
             ->with('success', "Usuario {$user->name} agregado como vendedor.");
